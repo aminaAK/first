@@ -1,0 +1,27 @@
+import RPi.GPIO as GPIO
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(22, GPIO.OUT)
+a = GPIO.PWM(22, 1000)
+
+
+a.start(0)
+try:
+    while True:
+        inputStr = input("Enter a duty cycle from 0% to 100% ('q' to exit) >> ")
+        if inputStr == 'q':
+            break
+
+        else:
+            if inputStr.isdigit() and int(inputStr) <= 100:
+                value = int(inputStr)
+                a.ChangeDutyCycle(value)
+            else:
+               print("From 0% to 100% you dummy")
+               continue
+finally:
+    a.stop()
+    print("/nPWM has stopped")
+    GPIO.cleanup()
+    print("Everything is cleaned up")
+  
