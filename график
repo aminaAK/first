@@ -1,0 +1,38 @@
+import numpy as np
+import textwrap
+import matplotlib.pyplot as plt
+
+#def decimal2binary(decimal):
+   #return [int(bit) for bit in bin(decimal)[2:].zfill(bits)]
+
+data=np.genfromtxt("data.txt", comments ="/n")
+settings = np.genfromtxt("settings.txt", comments ="/n")
+
+for i in range(len(data)):
+    data[i]=data[i]/256*3.3
+
+times =np.linspace(0,any(settings),len(data))
+fig = plt.figure()
+ax=fig.add_subplot(111)
+ax.set_xlim([min(times), max(times)*1.1])
+ax.set_ylim([min(data), max(data)*1.1])
+
+location = ['center', 'left', 'right']
+
+ax.set_title("/n".join(textwrap.wrap("Процесс заряда и разряда конденсатора в RC-цепочке",34)),loc = location[0])
+ax.set_xlabel('Время, с')
+ax.set_ylabel('Напряжение, В')
+
+plt.plot(times, data, linestyle ='-', marker ='.', linewidth = 1, color = 'blue',markevery =50, label = 'U(t)')
+
+plt.legend()
+
+ax.minorticks_on()
+ax.grid(which ='major', color='black', linestyle='-', linewidth = 1)
+ax.grid(which ='minor', color='black', linestyle='-', linewidth = 0.5)
+
+plt.text(0.5, 2.5, "время зарядки = {: .2f}".format(times[np.argmax(data)]))
+plt.text(0.5, 2, "время разрядки = {: .2f}".format(any(settings) - times[np.argmax(data)]))
+
+plt.savefig('test.png')
+plt.show()
